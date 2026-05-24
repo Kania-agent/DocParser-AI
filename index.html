@@ -3,104 +3,96 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DocParser-AI — Document Parsing & Entity Extraction</title>
+  <title>DocParser-AI — Intelligent Document Parser</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app-container">
-    <header class="app-header">
-      <h1>📄 DocParser-AI</h1>
-      <p class="subtitle">Intelligent Document Parsing & Entity Extraction Engine</p>
-    </header>
-
-    <div class="toolbar">
-      <button class="btn btn-primary" id="btnParse">🔍 Parse Document</button>
-      <button class="btn" id="btnHighlight">✨ Highlight Entities</button>
-      <button class="btn" id="btnExport">📥 Export JSON</button>
-      <select id="docType">
-        <option value="auto">Auto-detect type</option>
-        <option value="letter">Business Letter</option>
-        <option value="invoice">Invoice</option>
-        <option value="contract">Contract</option>
-        <option value="report">Report</option>
-      </select>
+  <header class="top-bar">
+    <div class="brand">
+      <span class="brand-icon">📄</span>
+      <h1>DocParser-AI</h1>
     </div>
+    <p class="tagline">Upload a document → extract entities, stats, and insights</p>
+  </header>
 
-    <div class="stats-bar">
-      <div class="stat-item">
-        <div class="stat-value" id="totalEntities">0</div>
-        <div class="stat-label">Entities</div>
+  <main class="container">
+    <!-- Upload Section -->
+    <section class="upload-section card">
+      <div class="upload-area" id="dropZone">
+        <input type="file" id="fileInput" accept=".txt,.md,.json" hidden>
+        <div class="upload-icon">📁</div>
+        <p>Drag &amp; drop a <strong>.txt</strong>, <strong>.md</strong>, or <strong>.json</strong> file here</p>
+        <p class="subtle">or click to browse</p>
+        <button class="btn btn-primary" id="browseBtn">Choose File</button>
       </div>
-      <div class="stat-item">
-        <div class="stat-value" id="entityCount">0</div>
-        <div class="stat-label">Extracted</div>
+      <div class="file-info hidden" id="fileInfo">
+        <span class="file-name" id="fileName"></span>
+        <span class="file-size" id="fileSize"></span>
+        <button class="btn btn-sm btn-danger" id="clearBtn">✕ Clear</button>
       </div>
-      <div class="stat-item">
-        <div class="stat-value" id="charCount">0</div>
-        <div class="stat-label">Characters</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value" id="wordCount">0</div>
-        <div class="stat-label">Words</div>
-      </div>
-    </div>
+    </section>
 
-    <div class="content-grid">
-      <!-- Left: Document Input -->
-      <div class="panel">
-        <div class="panel-header">
-          <span>📝</span>
-          <h2>Document Input</h2>
-        </div>
-        <div class="panel-body">
-          <textarea class="doc-input" id="docInput" placeholder="Paste or type your document text here..."></textarea>
-        </div>
+    <!-- Stats Section -->
+    <section class="stats-section hidden" id="statsSection">
+      <h2>📊 Document Statistics</h2>
+      <div class="stats-grid" id="statsGrid"></div>
+    </section>
+
+    <!-- Entity Results -->
+    <section class="results-section hidden" id="resultsSection">
+      <div class="results-header">
+        <h2>🔍 Extracted Entities</h2>
+        <button class="btn btn-success" id="exportBtn">⬇ Export JSON</button>
       </div>
 
-      <!-- Right: Entity Extraction -->
-      <div class="panel">
-        <div class="panel-header">
-          <span>🏷️</span>
-          <h2>Extracted Entities</h2>
-        </div>
-        <div class="panel-body">
-          <div class="entities-container" id="entitiesContainer">
-            <div class="empty-state">
-              <span class="icon">📋</span>
-              Click "Parse Document" to extract entities
-            </div>
-          </div>
+      <!-- Highlighted Document -->
+      <div class="card highlighted-doc-card">
+        <h3>📝 Highlighted Document</h3>
+        <div class="highlighted-doc" id="highlightedDoc"></div>
+      </div>
 
-          <div class="classification-section">
-            <h3>Document Classification</h3>
-            <div id="classifications"></div>
-          </div>
-        </div>
+      <!-- Entity Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="emails">📧 Emails <span class="badge" id="emailCount">0</span></button>
+        <button class="tab" data-tab="urls">🔗 URLs <span class="badge" id="urlCount">0</span></button>
+        <button class="tab" data-tab="phones">📞 Phones <span class="badge" id="phoneCount">0</span></button>
+        <button class="tab" data-tab="dates">📅 Dates <span class="badge" id="dateCount">0</span></button>
+        <button class="tab" data-tab="amounts">💰 Amounts <span class="badge" id="amountCount">0</span></button>
+        <button class="tab" data-tab="code">💻 Code Blocks <span class="badge" id="codeCount">0</span></button>
       </div>
-    </div>
 
-    <!-- Highlighted View -->
-    <div class="panel" style="margin-top: 20px; display: none;" id="highlightPanel">
-      <div class="panel-header">
-        <span>✨</span>
-        <h2>Highlighted Entities</h2>
-      </div>
-      <div class="panel-body">
-        <div class="highlighted-text" id="highlightedView"></div>
-      </div>
-    </div>
+      <div class="tab-content active" id="tab-emails"><ul class="entity-list" id="emailList"></ul></div>
+      <div class="tab-content" id="tab-urls"><ul class="entity-list" id="urlList"></ul></div>
+      <div class="tab-content" id="tab-phones"><ul class="entity-list" id="phoneList"></ul></div>
+      <div class="tab-content" id="tab-dates"><ul class="entity-list" id="dateList"></ul></div>
+      <div class="tab-content" id="tab-amounts"><ul class="entity-list" id="amountList"></ul></div>
+      <div class="tab-content" id="tab-code"><div class="code-blocks" id="codeList"></div></div>
+    </section>
 
-    <!-- OCR Results -->
-    <div class="panel" style="margin-top: 20px;">
-      <div class="panel-header">
-        <span>🔍</span>
-        <h2>OCR Results</h2>
+    <!-- Word Frequency -->
+    <section class="frequency-section hidden" id="frequencySection">
+      <h2>📈 Word Frequency Analysis</h2>
+      <div class="freq-controls">
+        <label>Show top
+          <select id="freqLimit">
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+            <option value="30">30</option>
+            <option value="50">50</option>
+          </select>
+          words
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="stopWordsToggle" checked> Exclude stop words
+        </label>
       </div>
-      <div class="panel-body">
-        <pre class="ocr-text" id="ocrResults">OCR results will appear here after parsing...</pre>
-      </div>
-    </div>
-  </div>
+      <div class="freq-chart" id="freqChart"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>DocParser-AI — Built for intelligent document analysis</p>
+  </footer>
 
   <script src="app.js"></script>
 </body>
