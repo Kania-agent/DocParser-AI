@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocParser-AI — Document Parsing & Entity Extraction</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <h1>📄 DocParser-AI</h1>
+      <p class="subtitle">Intelligent Document Parsing & Entity Extraction Engine</p>
+    </header>
+
+    <div class="toolbar">
+      <button class="btn btn-primary" id="btnParse">🔍 Parse Document</button>
+      <button class="btn" id="btnHighlight">✨ Highlight Entities</button>
+      <button class="btn" id="btnExport">📥 Export JSON</button>
+      <select id="docType">
+        <option value="auto">Auto-detect type</option>
+        <option value="letter">Business Letter</option>
+        <option value="invoice">Invoice</option>
+        <option value="contract">Contract</option>
+        <option value="report">Report</option>
+      </select>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-value" id="totalEntities">0</div>
+        <div class="stat-label">Entities</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="entityCount">0</div>
+        <div class="stat-label">Extracted</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="charCount">0</div>
+        <div class="stat-label">Characters</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="wordCount">0</div>
+        <div class="stat-label">Words</div>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <!-- Left: Document Input -->
+      <div class="panel">
+        <div class="panel-header">
+          <span>📝</span>
+          <h2>Document Input</h2>
+        </div>
+        <div class="panel-body">
+          <textarea class="doc-input" id="docInput" placeholder="Paste or type your document text here..."></textarea>
+        </div>
+      </div>
+
+      <!-- Right: Entity Extraction -->
+      <div class="panel">
+        <div class="panel-header">
+          <span>🏷️</span>
+          <h2>Extracted Entities</h2>
+        </div>
+        <div class="panel-body">
+          <div class="entities-container" id="entitiesContainer">
+            <div class="empty-state">
+              <span class="icon">📋</span>
+              Click "Parse Document" to extract entities
+            </div>
+          </div>
+
+          <div class="classification-section">
+            <h3>Document Classification</h3>
+            <div id="classifications"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Highlighted View -->
+    <div class="panel" style="margin-top: 20px; display: none;" id="highlightPanel">
+      <div class="panel-header">
+        <span>✨</span>
+        <h2>Highlighted Entities</h2>
+      </div>
+      <div class="panel-body">
+        <div class="highlighted-text" id="highlightedView"></div>
+      </div>
+    </div>
+
+    <!-- OCR Results -->
+    <div class="panel" style="margin-top: 20px;">
+      <div class="panel-header">
+        <span>🔍</span>
+        <h2>OCR Results</h2>
+      </div>
+      <div class="panel-body">
+        <pre class="ocr-text" id="ocrResults">OCR results will appear here after parsing...</pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
